@@ -209,8 +209,6 @@ else
     NON_CI="true"
 fi
 
-AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD="${CI}"
-
 # Extras used to to build slim airflow image
 AIRFLOW_SLIM_EXTRAS=${AIRFLOW_SLIM_EXTRAS:="all"}
 
@@ -256,6 +254,10 @@ echo "Building NPM? : ${AIRFLOW_CONTAINER_BUILD_NPM}"
 
 export AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD=${AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD:="true"}
 echo "The build optimised for CI? : ${AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD}"
+
+
+export AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD="${AIRFLOW_CONTAINER_CI_OPTIMISED_BUILD:=$CI}"
+echo "The build is optimised for CI case"
 
 
 # Base python image for the build

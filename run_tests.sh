@@ -66,6 +66,7 @@ if ! PARAMS=$(getopt \
     --name "${CMDNAME}" -- "$@")
 then
     usage
+    exit 1
 fi
 
 eval set -- "${PARAMS}"
