@@ -17,7 +17,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import doctest
 import json
 import multiprocessing
 import os
@@ -43,7 +42,7 @@ from numpy.testing import assert_array_almost_equal
 from pendulum import utcnow
 
 from airflow import configuration, models
-from airflow import jobs, DAG, utils, macros, settings, exceptions
+from airflow import jobs, DAG, utils, settings, exceptions
 from airflow.bin import cli
 from airflow.configuration import AirflowConfigException, run_command
 from airflow.exceptions import AirflowException
@@ -713,13 +712,6 @@ class CoreTest(unittest.TestCase):
             task=self.runme_0, execution_date=DEFAULT_DATE)
         ti.dag = self.dag_bash
         ti.run(ignore_ti_state=True)
-
-    def test_doctests(self):
-        modules = [utils, macros]
-        for mod in modules:
-            failed, tests = doctest.testmod(mod)
-            if failed:
-                raise Exception("Failed a doctest")
 
     def test_variable_set_get_round_trip(self):
         Variable.set("tested_var_set_id", "Monday morning breakfast")
