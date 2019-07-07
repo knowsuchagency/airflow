@@ -298,23 +298,24 @@ You can skip the database initialisation part with --skip-db-init (-s) flag.
 This is environment that is used during CI builds on Travis CI. We have scripts to reproduce the
 Travis environment and you can enter the environment and run it locally.
 
-The scripts used by Travis CI run also image builds which make the images contain all the sources. You can 
+The scripts used by Travis CI run also image builds which make the images contain all the sources. You can
 see which scripts are used in [.travis.yml](.travis.yml) file.
 
-You can use the same scripts after building the local CI images (using 
-[scripts/ci/local_ci_build.sh](scripts/ci/local_ci_build.sh). Note that building image pulls 
-the cached version of image from Dockerhub based on master sources and rebuilds the layers that need 
+You can use the same scripts after building the local CI images (using
+[scripts/ci/local_ci_build.sh](scripts/ci/local_ci_build.sh). Note that building image first time pulls
+the cached version of image from Dockerhub based on master sources and rebuilds the layers that need
 to be rebuilt - because they changed in local sources. This might take a bit of time when you run it for
 the first time and when you add new dependencies - but rebuilding the image should be an operation done
-quite rarely.
+quite rarely. Once you performed the first build, the images are rebuilt locally rather than pulled.
 
 You can also force-pull the images before building it locally so that you are sure that you download
-latest images from DockerHub repository before building.
+latest images from DockerHub repository before building. This can be done with
+[scripts/ci/local_ci_pull_and_build.sh](scripts/ci/local_ci_pull_and_build.sh) script.
 
-For your convenience, there are also scripts that might be useful for local development 
-- where local host sources are mounted to within the docker container. 
-Those "local" scripts starts with "local_" prefix in [scripts/ci](scripts/ci) folder and 
-they run Docker-Compose environment with relevant backends (mysql/postgres) and additional services started. 
+For your convenience, there are also scripts that might be useful for local development
+- where local host sources are mounted to within the docker container.
+Those "local" scripts starts with "local_" prefix in [scripts/ci](scripts/ci) folder and
+they run Docker-Compose environment with relevant backends (mysql/postgres) and additional services started.
 
 *Running the whole suite of tests:*
 
@@ -322,12 +323,10 @@ they run Docker-Compose environment with relevant backends (mysql/postgres) and 
 PYTHON_VERSION=3.6 BACKEND=postgres ENV=docker ./scripts/ci/local_ci_run_airflow_testing.sh
 ```
 
-PYTHON_VERSION might be one of 3.5/3.6
-BACKEND might be one of postgres/sqlite/mysql
-ENV might be one of docker/kubernetes
-
-In case of kubernetes tests, you have to also setup KUBERNETES_VERSION variable - currently
-supported is KUBERNETES_VERSION=v1.13.0.
+* PYTHON_VERSION might be one of 3.5/3.6
+* BACKEND might be one of postgres/sqlite/mysql
+* ENV might be one of docker/kubernetes
+* KUBERNETES_VERSION - required for Kubernetes tessts - currently KUBERNETES_VERSION=v1.13.0.
 
 The kubernetes env might not work locally as easily as other tests because it requires your host
 to be setup properly. We are working on making the kubernetes tests more easily reproducible locally in
@@ -350,8 +349,8 @@ Docker-compose environment starts a number of docker containers. You can tear th
 
 Note that you might need to cleanup your Docker environment from time to time. The images are quite big
 (1.5GB for both images needed for static code analysis and CI tests). And if you often rebuild/update
-images you might end up with some unused image data. 
- 
+images you might end up with some unused image data.
+
 Cleanup can be performed with `docker system prune` command. In case you have huge problems with disk space
 and want to clean-up all image data you can run `docker system prune --all`
 
